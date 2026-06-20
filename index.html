@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gartic الأسطورية | Rayan Games</title>
+    <title>X-Challenge | منصة التحديات والشات</title>
     <style>
         :root {
-            --main-bg: #1e1e2f;
-            --panel-bg: #27293d;
-            --accent-color: #e14eca;
-            --text-color: #ffffff;
-            --border-color: #3d3f5d;
+            --bg-main: #0b0c10;
+            --bg-panel: #1f2833;
+            --accent: #45f3ff;
+            --accent-purple: #c5a8ff;
+            --text-light: #ffffff;
+            --text-muted: #c5c6c7;
+            --success: #2ecc71;
+            --danger: #e74c3c;
         }
 
         * {
@@ -21,337 +24,641 @@
         }
 
         body {
-            background-color: var(--main-bg);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
+            background-color: var(--bg-main);
+            color: var(--text-light);
             height: 100vh;
             overflow: hidden;
         }
 
-        header {
-            background-color: var(--panel-bg);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--border-color);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        /* تنسيقات عامة للمشاهد */
+        .screen {
+            display: none;
+            height: 100vh;
+            width: 100vw;
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-shadow: 0 0 10px rgba(225, 78, 202, 0.5);
-        }
-
-        .game-info {
-            font-size: 18px;
-            background: rgba(255,255,255,0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-        }
-
-        .main-container {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 70px);
-            position: relative;
-        }
-
-        /* القائمة الجانبية للاعبين */
-        .players-panel {
-            width: 200px;
-            background-color: var(--panel-bg);
-            border-left: 2px solid var(--border-color);
-            padding: 15px;
+        .screen.active {
             display: flex;
             flex-direction: column;
-            gap: 10px;
         }
 
-        .player-card {
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-right: 4px solid var(--accent-color);
+        /* 1. صفحة تسجيل الدخول */
+        .login-container {
+            margin: auto;
+            background: var(--bg-panel);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            border: 1px solid rgba(69, 243, 255, 0.2);
         }
 
-        /* منطقة الرسم والتحكم */
-        .canvas-area {
-            flex: 1;
+        .login-container h2 {
+            margin-bottom: 25px;
+            color: var(--accent);
+        }
+
+        .avatar-selection {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            padding: 20px;
-            background: #14141f;
-        }
-
-        #paintCanvas {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            cursor: crosshair;
-        }
-
-        .toolbar {
-            margin-top: 15px;
-            background: var(--panel-bg);
-            padding: 10px 20px;
-            border-radius: 30px;
-            display: flex;
             gap: 15px;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
 
-        .color-picker {
-            width: 35px;
-            height: 35px;
-            border: none;
+        .avatar-option {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             cursor: pointer;
+            border: 3px solid transparent;
+            transition: 0.2s;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .avatar-option.selected {
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: #11141a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
         }
 
         .btn {
-            background: var(--accent-color);
-            color: white;
+            background: var(--accent);
+            color: #000;
             border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 16px;
+            width: 100%;
             transition: 0.2s;
         }
 
         .btn:hover {
-            transform: scale(1.05);
             opacity: 0.9;
+            transform: translateY(-2px);
         }
 
-        .btn-clear {
-            background: #ff3366;
+        .btn-google {
+            background: #ffffff;
+            color: #000;
+            margin-top: 10px;
         }
 
-        /* نظام الشات */
-        .chat-panel {
-            width: 300px;
-            background-color: var(--panel-bg);
-            border-right: 2px solid var(--border-color);
+        /* 2. صفحة الرومات */
+        header {
+            background: var(--bg-panel);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .rooms-main {
+            padding: 30px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .rooms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .room-card {
+            background: var(--bg-panel);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
             display: flex;
             flex-direction: column;
+            gap: 15px;
+        }
+
+        .room-card h3 {
+            color: var(--accent-purple);
+        }
+
+        /* 3. شاشة الشات داخل الروم */
+        .chat-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 70px);
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #11141a;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 15px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
-        .msg {
-            background: rgba(255,255,255,0.05);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            word-break: break-all;
+        .message {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            line-height: 1.4;
+            position: relative;
         }
 
-        .msg.system {
-            background: rgba(46, 204, 113, 0.2);
-            color: #2ecc71;
+        .message.incoming {
+            background: var(--bg-panel);
+            align-self: flex-start;
+            border-top-right-radius: 2px;
+        }
+
+        .message.outgoing {
+            background: #005c4b; /* لون واتساب داكن ومريح */
+            align-self: flex-end;
+            border-top-left-radius: 2px;
+        }
+
+        .message .sender {
+            font-size: 12px;
+            color: var(--accent);
+            margin-bottom: 4px;
             font-weight: bold;
+        }
+
+        .message.system-msg {
+            background: rgba(197, 168, 255, 0.15);
+            color: var(--accent-purple);
+            align-self: center;
+            max-width: 80%;
             text-align: center;
-        }
-
-        .chat-input-area {
-            padding: 15px;
-            border-top: 2px solid var(--border-color);
-            display: flex;
-            gap: 8px;
-        }
-
-        .chat-input {
-            flex: 1;
-            background: #14141f;
-            border: 1px solid var(--border-color);
-            padding: 10px;
             border-radius: 8px;
-            color: white;
-            outline: none;
+            border: 1px dashed var(--accent-purple);
         }
 
-        .chat-input:focus {
-            border-color: var(--accent-color);
+        .chat-input-bar {
+            background: var(--bg-panel);
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .challenge-btn {
+            background: #ff9f43;
+            color: black;
+            font-size: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .challenge-btn:hover {
+            transform: scale(1.1) rotate(-10deg);
+        }
+
+        /* القائمة الجانبية للأعضاء */
+        .members-sidebar {
+            width: 260px;
+            background: var(--bg-panel);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            display: none; /* تظهر وتختفي عند الضغط على الزر */
+        }
+
+        .members-sidebar.active {
+            display: block;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* 4. النافذة المنبثقة (Modal) للتحدي والإنشاء */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--accent);
+        }
+
+        /* 5. شاشة لعبة التحدي */
+        .quiz-box {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 16px;
+            margin: auto;
+            border: 2px solid var(--accent);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background: #11141a;
+            color: white;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent);
+            background: rgba(69, 243, 255, 0.05);
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">Gartic الأسطورية 🔥</div>
-        <div class="game-info" id="wordDisplay">الكلمة المراد رسمها: جاري اختيار كلمة...</div>
-        <div class="game-info">النقاط: <span id="score">0</span></div>
-    </header>
-
-    <div class="main-container">
-        <div class="players-panel">
-            <h3>اللاعبين</h3>
-            <div class="player-card">
-                <span>ريان (أنت)</span>
-                <span id="playerScore">0</span>
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <h2>مرحباً بك في عالم التحديات ⚔️</h2>
+            <div class="input-group">
+                <label>اختر صورتك التعبيرية:</label>
+                <div class="avatar-selection">
+                    <div class="avatar-option selected" onclick="selectAvatar(this, '🥷')">🥷</div>
+                    <div class="avatar-option" onclick="selectAvatar(this, '🧙‍♂️')">🧙‍♂️</div>
+                    <div class="avatar-option" onclick="selectAvatar(this, '👑')">👑</div>
+                    <div class="avatar-option" onclick="selectAvatar(this, '🚀')">🚀</div>
+                </div>
             </div>
-            <div class="player-card" style="border-right-color: #33cdff;">
-                <span>بوت التحدي</span>
-                <span>120</span>
+            <div class="input-group">
+                <label>اسم المستخدم:</label>
+                <input type="text" id="usernameInput" class="form-input" placeholder="اكتب اسمك الأسطوري هنا...">
+            </div>
+            <button class="btn" onclick="login()">دخول المنصة</button>
+            <button class="btn btn-google" onclick="login('جيميل')">تسجيل بواسطة Gmail 🔴</button>
+        </div>
+    </div>
+
+    <div id="roomsScreen" class="screen">
+        <header>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span id="userAvatarHeader" style="font-size:24px"></span>
+                <h3 id="userNameHeader"></h3>
+            </div>
+            <h2 style="color: var(--accent)">رومات التحدي الحية</h2>
+            <button class="btn" style="width:auto;" onclick="openModal('createRoomModal')">+ إنشاء روم جديدة</button>
+        </header>
+        <div class="rooms-main">
+            <div class="rooms-header">
+                <h3>الغرف المتاحة حالياً</h3>
+            </div>
+            <div class="rooms-grid" id="roomsGrid">
+                </div>
+        </div>
+    </div>
+
+    <div id="chatScreen" class="screen">
+        <header>
+            <button class="btn" style="width:auto; background:#333; color:white;" onclick="leaveRoom()">⬅ مغادرة الروم</button>
+            <h2 id="currentRoomTitle" style="color: var(--accent-purple)">اسم الروم</h2>
+            <button class="btn" style="width:auto;" onclick="toggleMembers()">👥 الأعضاء</button>
+        </header>
+        <div class="chat-container">
+            <div class="members-sidebar" id="membersSidebar">
+                <h3>المتواجدون حالياً</h3>
+                <div class="member-item">👑 <span id="roomOwnerName">ريان</span> (مسؤول)</div>
+                <div class="member-item">🤖 بوت الذكاء الاصطناعي</div>
+                <div class="member-item">👤 لاعب عشوائي 1</div>
+            </div>
+            <div class="chat-main">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message system-msg">لقد دخلت الغرفة بنجاح! اضغط على السيف ⚔️ لبدء تحدي فوري.</div>
+                </div>
+                <div class="chat-input-bar">
+                    <button class="challenge-btn" title="إرسال تحدي" onclick="openModal('challengeSettingsModal')">⚔️</button>
+                    <input type="text" id="chatInputField" class="form-input" placeholder="اكتب رسالتك للكل...">
+                    <button class="btn" style="width:auto;" onclick="sendChatMessage()">إرسال</button>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="canvas-area">
-            <canvas id="paintCanvas" width="700" height="450"></canvas>
-            
-            <div class="toolbar">
-                <input type="color" id="colorPicker" class="color-picker" value="#000000">
-                <input type="range" id="brushSize" min="2" max="20" value="5">
-                <label for="brushSize">الحجم</label>
-                <button class="btn btn-clear" id="clearBtn">مسح اللوحة</button>
-                <button class="btn" id="nextWordBtn">تغيير الكلمة</button>
+    <div id="quizScreen" class="screen" style="justify-content: center; align-items: center;">
+        <div class="quiz-box">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 20px; color: var(--accent)">
+                <span id="quizProgress">السؤال: 1 من 3</span>
+                <span id="quizScore">النقاط: 0</span>
+            </div>
+            <h2 id="questionText" style="margin-bottom: 25px;">جاري تحميل السؤال...</h2>
+            <div class="options-grid" id="optionsGrid">
+                </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="createRoomModal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; color: var(--accent);">إنشاء غرفة تحدي جديدة</h3>
+            <div class="input-group">
+                <label>اسم الروم:</label>
+                <input type="text" id="roomNameInput" class="form-input" placeholder="مثال: تحدي الأذكياء فقط">
+            </div>
+            <div class="input-group">
+                <label>الحد الأقصى للأعضاء:</label>
+                <input type="number" id="roomMaxPlayers" class="form-input" value="10" min="2">
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn" onclick="createNewRoom()">تأكيد الإنشاء</button>
+                <button class="btn" style="background:#444; color:white;" onclick="closeModal('createRoomModal')">إلغاء</button>
             </div>
         </div>
+    </div>
 
-        <div class="chat-panel">
-            <div class="chat-messages" id="chatMessages">
-                <div class="msg system">مرحباً بك في تحدي الرسم! خمن الكلمة المكتوبة في الأعلى أو ارسمها!</div>
+    <div class="modal-overlay" id="challengeSettingsModal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; color: #ff9f43;">⚙️ إعدادات التحدي والأسئلة</h3>
+            <div class="input-group">
+                <label>عدد الأسئلة:</label>
+                <select id="quizCountSelect" class="form-input">
+                    <option value="3">3 أسئلة (تحدي سريع)</option>
+                    <option value="5">5 أسئلة (تحدي متوسط)</option>
+                    <option value="10">10 أسئلة (ماراثون معلومات)</option>
+                </select>
             </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" class="chat-input" placeholder="اكتب تخمينك أو دردش هنا...">
-                <button class="btn" id="sendBtn">إرسال</button>
+            <div class="input-group">
+                <label>مستوى الصعوبة:</label>
+                <select id="quizDifficultySelect" class="form-input">
+                    <option value="easy">سهل وممتع</option>
+                    <option value="medium">متوسط (للمثقفين)</option>
+                    <option value="hard">صعب جداً 🔥</option>
+                </select>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn" style="background:#ff9f43; color:black;" onclick="sendChallengeMessage()">إرسال التحدي للشات ⚔️</button>
+                <button class="btn" style="background:#444; color:white;" onclick="closeModal('challengeSettingsModal')">تراجع</button>
             </div>
         </div>
     </div>
 
     <script>
-        // إعدادات لوحة الرسم
-        const canvas = document.getElementById('paintCanvas');
-        const ctx = canvas.getContext('2d');
-        const colorPicker = document.getElementById('colorPicker');
-        const brushSize = document.getElementById('brushSize');
-        const clearBtn = document.getElementById('clearBtn');
+        let currentUser = { name: "ريان", avatar: "🥷" };
+        let currentRoom = null;
+        let selectedAvatarSymbol = "🥷";
         
-        let painting = false;
+        // عينة من الرومات المتاحة مبدئياً
+        let roomsList = [
+            { id: 1, name: "روم ريان الرسمية 🔥", max: 50, current: 12 },
+            { id: 2, name: "تحدي معلومات عامة 🧠", max: 20, current: 7 }
+        ];
 
-        function startPosition(e) {
-            painting = true;
-            draw(e);
+        // قاعدة بيانات الأسئلة بكل المجالات
+        const questionsDatabase = [
+            { q: "ما هو أكبر كوكب في المجموعة الشمسية؟", options: ["المريخ", "المشتري", "الأرض", "زحل"], correct: 1 },
+            { q: "كم عدد قارات العالم؟", options: ["5 قارات", "6 قارات", "7 قارات", "8 قارات"], correct: 2 },
+            { q: "ما هي عاصمة دولة فلسطين؟", options: ["القدس", "رام الله", "غزة", "نابلس"], correct: 0 },
+            { q: "من هو مخترع المصباح الكهربائي؟", options: ["نيوتن", "أديسون", "تسلا", "دا فينشي"], correct: 1 }
+        ];
+
+        let currentQuizIndex = 0;
+        let userPoints = 0;
+        let totalQuizQuestions = 3;
+
+        // دالة التنقل بين الشاشات
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
         }
 
-        function finishedPosition() {
-            painting = false;
-            ctx.beginPath();
+        function selectAvatar(element, symbol) {
+            document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedAvatarSymbol = symbol;
         }
 
-        function draw(e) {
-            if (!painting) return;
-            ctx.lineWidth = brushSize.value;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = colorPicker.value;
+        function login(type = 'normal') {
+            const inputName = document.getElementById('usernameInput').value.trim();
+            if (type === 'جيميل') {
+                currentUser.name = "Rayan_GoogleUser";
+            } else {
+                currentUser.name = inputName ? inputName : "لاعب أسطوري";
+            }
+            currentUser.avatar = selectedAvatarSymbol;
 
-            // حساب موقع الماوس بالنسبة للوحة الرسم
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            document.getElementById('userNameHeader').innerText = currentUser.name;
+            document.getElementById('userAvatarHeader').innerText = currentUser.avatar;
+            document.getElementById('roomOwnerName').innerText = currentUser.name;
+
+            renderRooms();
+            showScreen('roomsScreen');
         }
 
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mouseup', finishedPosition);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseleave', finishedPosition);
-
-        clearBtn.addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        });
-
-        // نظام اللعبة والكلمات والشات
-        const words = ['سيارة', 'تفاحة', 'شجرة', 'بيت', 'قلم', 'كمبيوتر', 'هاتف', 'شمس', 'قمر', 'سيف'];
-        let currentWord = '';
-        let score = 0;
-
-        const wordDisplay = document.getElementById('wordDisplay');
-        const scoreDisplay = document.getElementById('score');
-        const playerScore = document.getElementById('playerScore');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const nextWordBtn = document.getElementById('nextWordBtn');
-
-        function setRandomWord() {
-            const randomIndex = Math.floor(Math.random() * words.length);
-            currentWord = words[randomIndex];
-            wordDisplay.innerText = `الكلمة المراد رسمها: ${currentWord}`;
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // مسح اللوحة عند تغيير الكلمة
+        function renderRooms() {
+            const grid = document.getElementById('roomsGrid');
+            grid.innerHTML = "";
+            roomsList.forEach(room => {
+                grid.innerHTML += `
+                    <div class="room-card">
+                        <h3>${room.name}</h3>
+                        <p style="color: var(--text-muted)">العدد الحالي: ${room.current} / ${room.max} لاعب</p>
+                        <button class="btn" onclick="enterRoom('${room.name}')">دخول الروم</button>
+                    </div>
+                `;
+            });
         }
 
-        function handleSendMessage() {
-            const text = chatInput.value.trim();
-            if (text === '') return;
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-            // إضافة رسالة اللاعب للشات
-            appendMessage('ريان', text);
+        function createNewRoom() {
+            const name = document.getElementById('roomNameInput').value.trim();
+            const max = document.getElementById('roomMaxPlayers').value;
+            if(!name) return alert("الرجاء كتابة اسم الروم!");
 
-            // التحقق من التخمين
-            if (text === currentWord) {
-                appendSystemMessage('🎉 مبروك! لقد قمت بتخمين الكلمة الصحيحة!');
-                score += 10;
-                scoreDisplay.innerText = score;
-                playerScore.innerText = score;
-                setRandomWord();
+            const newRoom = { id: Date.now(), name: name, max: max, current: 1 };
+            roomsList.push(newRoom);
+            renderRooms();
+            closeModal('createRoomModal');
+        }
+
+        function enterRoom(roomName) {
+            currentRoom = roomName;
+            document.getElementById('currentRoomTitle').innerText = roomName;
+            showScreen('chatScreen');
+        }
+
+        function leaveRoom() {
+            showScreen('roomsScreen');
+        }
+
+        function toggleMembers() {
+            document.getElementById('membersSidebar').classList.toggle('active');
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInputField');
+            const text = input.value.trim();
+            if(!text) return;
+
+            appendMessage(currentUser.name, text, 'outgoing');
+            input.value = "";
+
+            // محاكاة رد تلقائي بسيط بعد ثانيتين عشان تحس بالشات
+            setTimeout(() => {
+                appendMessage("لاعب عشوائي 1", "هلا والله نورت الروم! 🥳", 'incoming');
+            }, 1500);
+        }
+
+        function appendMessage(sender, text, type) {
+            const container = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', type);
+            if (type !== 'system-msg') {
+                msgDiv.innerHTML = `<div class="sender">${sender}</div><div>${text}</div>`;
+            } else {
+                msgDiv.innerText = text;
+            }
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // إرسال تحدي والكبسة التلقائية "قبول التحدي"
+        function sendChallengeMessage() {
+            closeModal('challengeSettingsModal');
+            const count = document.getElementById('quizCountSelect').value;
+            totalQuizQuestions = parseInt(count);
+
+            appendMessage("نظام التحديات ⚔️", `أرسل ${currentUser.name} تحدي معلومات عامة حقيقي!`, 'system-msg');
+            
+            // ظهور رسالة زر القبول داخل الشات
+            const container = document.getElementById('chatMessages');
+            const acceptBox = document.createElement('div');
+            acceptBox.style.cssText = "background: #222; padding: 15px; border-radius: 8px; text-align: center; margin: 10px auto; border: 1px solid #ff9f43; width: 80%;";
+            acceptBox.innerHTML = `
+                <p style="margin-bottom:10px;">تحدي معلومات عامة من ${totalQuizQuestions} أسئلة!</p>
+                <button class="btn" style="background:#ff9f43; color:black;" onclick="startQuizGame(this)">قبول التحدي 🤝</button>
+            `;
+            container.appendChild(acceptBox);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // بدء لعبة الأسئلة الفورية
+        function startQuizGame(btnElement) {
+            btnElement.parentElement.remove(); // إخفاء زر القبول بعد الضغط
+            currentQuizIndex = 0;
+            userPoints = 0;
+            showScreen('quizScreen');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuizIndex >= totalQuizQuestions || currentQuizIndex >= questionsDatabase.length) {
+                endQuizGame();
+                return;
             }
 
-            chatInput.value = '';
+            document.getElementById('quizProgress').innerText = `السؤال: ${currentQuizIndex + 1} من ${totalQuizQuestions}`;
+            document.getElementById('quizScore').innerText = `النقاط: ${userPoints}`;
+
+            const currentQ = questionsDatabase[currentQuizIndex];
+            document.getElementById('questionText').innerText = currentQ.q;
+
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = "";
+            currentQ.options.forEach((opt, idx) => {
+                optionsGrid.innerHTML += `<button class="option-btn" onclick="checkAnswer(${idx})">${opt}</button>`;
+            });
         }
 
-        function appendMessage(sender, text) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('msg');
-            msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
-            chatMessages.appendChild(msgDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        function checkAnswer(selectedIdx) {
+            const currentQ = questionsDatabase[currentQuizIndex];
+            if (selectedIdx === currentQ.correct) {
+                userPoints += 10;
+            }
+            currentQuizIndex++;
+            loadQuestion();
         }
 
-        function appendSystemMessage(text) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('msg', 'system');
-            msgDiv.innerText = text;
-            chatMessages.appendChild(msgDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        function endQuizGame() {
+            showScreen('chatScreen');
+            // إرسال رسالة التهنئة التلقائية للكل في الشات
+            appendMessage("🏆 نظام التحديات التلقائي", `🎉 مبارك للأسطورة ${currentUser.name}! لقد أنهى التحدي بنجاح وحصد ${userPoints} نقطة في معلومات عامة! 🥳🔥`, 'system-msg');
         }
 
-        sendBtn.addEventListener('click', handleSendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSendMessage();
+        // تفعيل الإرسال عند الضغط على Enter في حقل الشات
+        document.getElementById('chatInputField').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') sendChatMessage();
         });
-
-        nextWordBtn.addEventListener('click', () => {
-            setRandomWord();
-            appendSystemMessage('🔄 تم تغيير الكلمة بطلب منك.');
-        });
-
-        // تشغيل اللعبة لأول مرة عند تحميل الصفحة
-        setRandomWord();
-    </script>
-</body>
-</html>        function checkEnter(e) {
-            if(e.key === 'Enter') sendMessage();
-        }
     </script>
 </body>
 </html>
