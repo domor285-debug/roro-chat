@@ -3,36 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>X-Challenge | Chat & Trivia Arena</title>
+    <title>X-Challenge Pro | Ultimate Chat & Trivia Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         :root {
-            --bg-main: #0b0c10;
-            --bg-panel: #1f2833;
-            --accent: #45f3ff;
-            --accent-purple: #c5a8ff;
-            --text-light: #ffffff;
-            --text-muted: #c5c6c7;
+            --bg-base: #06070d;
+            --bg-surface: #11131e;
+            --bg-card: #1a1d2e;
+            --primary: #45f3ff;
+            --primary-glow: rgba(69, 243, 255, 0.4);
+            --secondary: #b57cff;
+            --accent: #ff9f43;
+            --text-main: #ffffff;
+            --text-muted: #8e94ad;
+            --danger: #ff4d6d;
             --success: #2ecc71;
-            --danger: #e74c3c;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-light);
+            background-color: var(--bg-base);
+            color: var(--text-main);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Screens Layout */
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* Unified Screens framework */
         .screen {
             display: none;
             flex: 1;
@@ -46,276 +62,295 @@
             flex-direction: column;
         }
 
-        /* 1. Login Screen */
-        .login-screen-container {
+        /* 1. Cinematic Login Screen */
+        .login-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            background: radial-gradient(circle at center, #1a1235 0%, var(--bg-base) 70%);
             padding: 20px;
         }
 
-        .login-container {
-            background: var(--bg-panel);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        .login-card {
+            background: rgba(17, 19, 30, 0.75);
+            border: 1px solid rgba(69, 243, 255, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 24px;
             width: 100%;
-            max-width: 400px;
+            max-width: 440px;
             text-align: center;
-            border: 1px solid rgba(69, 243, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
 
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: var(--accent);
-            font-size: 22px;
+        .login-card h2 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
         }
 
-        /* Device Image Upload Styling */
-        .avatar-upload-container {
+        .avatar-uploader {
             position: relative;
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px;
+            width: 100px;
+            height: 100px;
+            margin: 25px auto;
             cursor: pointer;
         }
 
-        .avatar-preview {
+        .avatar-uploader img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--accent);
-            background: #11141a;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            transition: var(--transition);
         }
 
-        .upload-badge {
+        .avatar-uploader:hover img {
+            transform: scale(1.05);
+            border-color: var(--secondary);
+        }
+
+        .upload-icon-tag {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            background: var(--accent);
+            bottom: 0; right: 0;
+            background: var(--primary);
             color: #000;
-            width: 26px;
-            height: 26px;
+            width: 30px; height: 30px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
         }
 
-        .input-group {
-            margin-bottom: 15px;
+        .input-wrapper {
+            margin-bottom: 20px;
             text-align: left;
         }
 
-        .input-group label {
+        .input-wrapper label {
             display: block;
-            margin-bottom: 6px;
+            font-size: 12px;
             color: var(--text-muted);
-            font-size: 13px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .form-input {
+        .custom-input {
             width: 100%;
-            padding: 10px 14px;
-            background: #11141a;
-            border: 1px solid #333;
-            border-radius: 8px;
+            padding: 14px 16px;
+            background: rgba(6, 7, 13, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
             color: white;
-            font-size: 14px;
+            font-size: 15px;
             outline: none;
+            transition: var(--transition);
         }
 
-        .form-input:focus {
-            border-color: var(--accent);
+        .custom-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(69, 243, 255, 0.1);
         }
 
-        .btn {
-            background: var(--accent);
-            color: #000;
+        .btn-modern {
+            background: var(--primary);
+            color: #06070d;
+            font-weight: 700;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 14px 24px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
             width: 100%;
-            transition: 0.2s;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
         }
 
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--primary-glow);
         }
 
-        .btn-google {
+        .btn-google-login {
             background: #ffffff;
-            color: #000;
-            margin-top: 10px;
+            color: #111;
+            margin-top: 12px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* Header Navigation */
-        header {
-            background: var(--bg-panel);
-            padding: 12px 20px;
+        /* App Navbar Header */
+        .app-header {
+            background: var(--bg-surface);
+            padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            min-height: 60px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            z-index: 10;
         }
 
-        /* 2. Rooms Screen */
-        .rooms-main {
-            padding: 20px;
+        /* 2. Rooms Dashboard Layout */
+        .dashboard-container {
+            padding: 32px;
             flex: 1;
             overflow-y: auto;
         }
 
-        .rooms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+        .dashboard-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
         }
 
-        .room-card {
-            background: var(--bg-panel);
-            padding: 18px;
-            border-radius: 12px;
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .modern-room-card {
+            background: var(--bg-surface);
             border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 18px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 12px;
+            transition: var(--transition);
         }
 
-        .room-card h3 {
-            color: var(--accent-purple);
-            font-size: 16px;
+        .modern-room-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
-        .room-tag {
-            font-size: 11px;
-            color: var(--accent);
-            font-weight: bold;
-            background: rgba(69, 243, 255, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-
-        /* 3. Chat Layout */
-        .chat-container {
+        /* 3. High-Tier Workspace Chat Layout */
+        .workspace-container {
             display: flex;
             flex: 1;
             overflow: hidden;
-            position: relative;
         }
 
-        .chat-main {
+        .chat-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #11141a;
+            background: #090a10;
+            height: 100%;
         }
 
-        .chat-messages {
+        .chat-feed {
             flex: 1;
-            padding: 15px;
+            padding: 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
         }
 
-        .message {
-            max-width: 75%;
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.4;
+        .chat-bubble-wrap {
+            display: flex;
+            flex-direction: column;
+            max-width: 65%;
         }
 
-        .message.incoming {
-            background: var(--bg-panel);
-            align-self: flex-start;
-            border-top-left-radius: 2px;
-        }
+        .chat-bubble-wrap.me { align-self: flex-end; align-items: flex-end; }
+        .chat-bubble-wrap.them { align-self: flex-start; align-items: flex-start; }
 
-        .message.outgoing {
-            background: #005c4b; 
-            align-self: flex-end;
-            border-top-right-radius: 2px;
-        }
-
-        .message .sender {
+        .chat-sender-tag {
             font-size: 11px;
-            color: var(--accent);
-            margin-bottom: 2px;
-            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 500;
+            padding: 0 4px;
         }
 
-        .message.system-msg {
-            background: rgba(197, 168, 255, 0.12);
-            color: var(--accent-purple);
+        .bubble-core {
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .chat-bubble-wrap.me .bubble-core {
+            background: linear-gradient(135deg, #007a61 0%, #005c4b 100%);
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble-wrap.them .bubble-core {
+            background: var(--bg-card);
+            border-bottom-left-radius: 4px;
+        }
+
+        .system-banner {
             align-self: center;
-            max-width: 90%;
-            text-align: center;
-            border-radius: 8px;
+            background: rgba(181, 124, 255, 0.08);
+            border: 1px dashed rgba(181, 124, 255, 0.4);
+            color: var(--secondary);
             font-size: 13px;
-            border: 1px dashed var(--accent-purple);
+            padding: 10px 24px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 80%;
         }
 
-        .chat-input-bar {
-            background: var(--bg-panel);
-            padding: 12px;
+        /* The Sticky Persistent Input Workspace Area */
+        .workspace-input-dock {
+            background: var(--bg-surface);
+            padding: 16px 24px;
             display: flex;
-            gap: 10px;
+            gap: 14px;
             align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        .challenge-btn {
-            background: #ff9f43;
-            color: black;
-            font-size: 18px;
-            width: 40px;
-            height: 40px;
+        .pulse-challenge-btn {
+            background: var(--accent);
+            color: #000;
+            font-size: 20px;
+            width: 48px; height: 48px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            border: none; cursor: pointer; flex-shrink: 0;
+            transition: var(--transition);
+            box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.4);
+            animation: pulse-effect 2s infinite;
         }
 
-        /* Sidebar Members Panel */
-        .members-sidebar {
-            width: 240px;
-            background: var(--bg-panel);
-            border-left: 1px solid rgba(255,255,255,0.1);
-            padding: 15px;
+        @keyframes pulse-effect {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 159, 67, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
+        }
+
+        /* Sidebar Panel */
+        .right-sidebar {
+            width: 280px;
+            background: var(--bg-surface);
+            border-left: 1px solid rgba(255,255,255,0.05);
+            padding: 24px;
             display: none;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .members-sidebar.active {
-            display: block;
-        }
+        .right-sidebar.active { display: flex; }
 
-        /* Modals Overlays */
-        .modal-overlay {
+        /* Dynamic Modals Overlays Frame */
+        .overlay-backdrop {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(3, 4, 7, 0.85);
+            backdrop-filter: blur(8px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -323,444 +358,446 @@
             padding: 20px;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .overlay-backdrop.active { display: flex; }
 
-        .modal-content {
-            background: var(--bg-panel);
-            padding: 25px;
-            border-radius: 16px;
+        .modal-body-box {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 32px;
+            border-radius: 24px;
             width: 100%;
-            max-width: 420px;
-            border: 1px solid var(--accent);
+            max-width: 440px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        /* Simulated Loader */
-        .loader-box {
-            text-align: center;
-            color: var(--accent);
+        /* Toast Popup Notifications Engine */
+        #toastSystemContainer {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        .spinner {
-            border: 4px solid rgba(255,255,255,0.1);
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            border-left-color: var(--accent);
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* 4. Quiz Box Area */
-        .quiz-container-box {
+        .toast-card {
+            background: var(--bg-card);
+            border-left: 4px solid var(--primary);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-            flex: 1;
+            gap: 12px;
+            animation: slideIn 0.3s ease forwards;
         }
 
-        .quiz-box {
-            text-align: center;
+        @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+
+        /* 4. Gamified Quiz Module Layout */
+        .quiz-view-box {
+            background: var(--bg-surface);
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 30px rgba(69, 243, 255, 0.15);
             width: 100%;
-            max-width: 500px;
-            background: var(--bg-panel);
-            padding: 25px;
-            border-radius: 16px;
-            border: 2px solid var(--accent);
+            max-width: 550px;
+            padding: 32px;
+            border-radius: 24px;
+            text-align: center;
         }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        @media(min-width: 480px) { .options-grid { grid-template-columns: 1fr 1fr; } }
-
-        .option-btn {
-            background: #11141a;
-            color: white;
-            border: 1px solid #333;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .option-btn:hover { border-color: var(--accent); }
     </style>
 </head>
 <body>
 
-    <div id="loginScreen" class="screen active">
-        <div class="login-screen-container">
-            <div class="login-container">
-                <h2>X-Challenge ⚔️</h2>
-                <p style="color: var(--text-muted); font-size:13px; margin-bottom:20px;">Upload image and choose nickname</p>
-                
-                <div class="avatar-upload-container" onclick="document.getElementById('fileInput').click()">
-                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c5c6c7'><path d='M12 12c2.21 0 4-1.79 4-4s1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>" id="avatarPreview" class="avatar-preview">
-                    <div class="upload-badge">+</div>
-                </div>
-                <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="previewUserImage(event)">
+    <div id="toastSystemContainer"></div>
 
-                <div class="input-group">
-                    <label>Username:</label>
-                    <input type="text" id="usernameInput" class="form-input" placeholder="e.g., Rayan_Legend">
+    <div id="loginScreen" class="screen active">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <h2>X-CHALLENGE PRO</h2>
+                <p style="color: var(--text-muted); font-size:14px;">Next-Gen Elite Social Gaming Arena</p>
+                
+                <div class="avatar-uploader" onclick="document.getElementById('hardwareFileInput').click()" title="Upload Custom Profile Picture">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238e94ad'><path d='M12 12c2.21 0 4-1.79 4-4s1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>" id="avatarPreviewNode">
+                    <div class="upload-icon-tag"><i class="fa-solid fa-plus"></i></div>
                 </div>
-                <button class="btn" onclick="loginPlatform('normal')">Enter Arena</button>
-                <button class="btn btn-google" onclick="loginPlatform('gmail')">Continue with Gmail 🔴</button>
+                <input type="file" id="hardwareFileInput" accept="image/*" style="display:none;" onchange="processLocalImage(event)">
+
+                <div class="input-wrapper">
+                    <label>Player Nickname</label>
+                    <input type="text" id="playerNameInputField" class="custom-input" placeholder="e.g., Rayan_Alpha">
+                </div>
+                
+                <button class="btn-modern" onclick="authenticateUser('standard')">ENTER ARENA</button>
+                <button class="btn-modern btn-google-login" onclick="authenticateUser('gmail')">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="16"> CONTINUE WITH GMAIL
+                </button>
             </div>
         </div>
     </div>
 
     <div id="roomsScreen" class="screen">
-        <header>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <img id="userHeaderAvatar" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid var(--accent);">
-                <span id="userHeaderName" style="font-weight: bold; font-size:14px;"></span>
+        <header class="app-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img id="navbarProfileImage" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+                <span id="navbarProfileName" style="font-weight: 600; font-size:15px; color:#fff;"></span>
             </div>
-            <h2 style="color: var(--accent)">Dashboard Rooms</h2>
-            <button class="btn" id="createNewRoomBtn" style="width:auto; padding: 6px 12px;" onclick="openModal('createRoomModal')">+ Create Room</button>
+            <h2>METAVERSE LOBBY</h2>
+            <button class="btn-modern" id="globalCreateRoomActionTrigger" style="width:auto; padding: 8px 16px;" onclick="triggerModalState('createRoomModal', true)">+ CREATE ROOM</button>
         </header>
-        <div class="rooms-main">
-            <h3 style="font-size: 15px;">Available Rooms</h3>
-            <div class="rooms-grid" id="roomsGrid"></div>
+        <div class="dashboard-container">
+            <div class="dashboard-top">
+                <h3 style="font-size: 16px; color: var(--text-muted);">LIVE GAMING AREAS</h3>
+            </div>
+            <div class="grid-layout" id="lobbyRoomsDynamicGrid"></div>
         </div>
     </div>
 
     <div id="chatScreen" class="screen">
-        <header>
-            <button class="btn" style="width:auto; background:#333; color:white; padding: 6px 12px;" onclick="leaveRoom()">⬅ Back</button>
-            <h2 id="currentRoomTitle" style="color: var(--accent-purple)">Room</h2>
-            <div id="headerActionArea"></div>
+        <header class="app-header">
+            <button class="btn-modern" style="width:auto; background:#222538; color:white; padding: 8px 16px;" onclick="leaveRoomContext()">⬅ LEAVE HUB</button>
+            <h2 id="activeWorkspaceRoomTitle" style="color: var(--secondary)">ACTIVE ARENA</h2>
+            <div id="runtimeHeaderActionMount"></div>
         </header>
-        <div class="chat-container">
-            <div class="chat-main">
-                <div class="chat-messages" id="chatMessages"></div>
-                <div class="chat-input-bar">
-                    <button class="challenge-btn" onclick="openModal('challengeSettingsModal')">⚔️</button>
-                    <input type="text" id="chatInputField" class="form-input" placeholder="Type a message...">
-                    <button class="btn" style="width:auto;" onclick="sendChatMessage()">Send</button>
+        <div class="workspace-container">
+            <div class="chat-panel">
+                <div class="chat-feed" id="chatMessageStreamBox"></div>
+                
+                <div class="workspace-input-dock">
+                    <button class="pulse-challenge-btn" title="Launch Live Trivia Challenge" onclick="triggerModalState('challengeSettingsModal', true)">⚔️</button>
+                    <input type="text" id="workspaceMainTextInput" class="custom-input" style="margin-bottom:0;" placeholder="Broadcast a secure message to the room...">
+                    <button class="btn-modern" style="width: 100px;" onclick="dispatchUserMessage()">SEND</button>
                 </div>
             </div>
-            <div class="members-sidebar" id="membersSidebar">
-                <h3 style="font-size:14px; margin-bottom:10px;">Room Members</h3>
-                <div id="sidebarMembersList"></div>
+            
+            <div class="right-sidebar" id="workspaceRightSidebar">
+                <h3 style="font-size:13px; color: var(--text-muted);">CONNECTED USERS</h3>
+                <div id="sidebarDynamicMembersBox"></div>
             </div>
         </div>
     </div>
 
-    <div id="quizScreen" class="screen">
-        <div class="quiz-container-box">
-            <div class="quiz-box">
-                <div style="display:flex; justify-content: space-between; margin-bottom: 15px; color: var(--accent); font-size:13px;">
-                    <span id="quizProgress">Question: 1</span>
-                    <span id="quizScore">Score: 0</span>
-                </div>
-                <h2 id="questionText" style="margin-bottom: 20px;">Question?</h2>
-                <div class="options-grid" id="optionsGrid"></div>
+    <div id="quizScreen" class="screen" style="justify-content:center; align-items:center; background:#080910;">
+        <div class="quiz-view-box">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 20px; color: var(--primary); font-size:13px; font-weight:600;">
+                <span id="runtimeQuizProgressMeta">QUESTION: 1/3</span>
+                <span id="runtimeQuizScoreMeta">SCORE: 0 XP</span>
+            </div>
+            <h2 id="quizCoreQuestionText" style="margin-bottom: 24px; font-size: 20px; color:#fff;">Acquiring Question Content...</h2>
+            <div class="options-grid" id="quizAnswersDynamicGrid"></div>
+        </div>
+    </div>
+
+    <div class="overlay-backdrop" id="createRoomModal">
+        <div class="modal-body-box">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">Configure Room Architecture</h3>
+            <div class="input-wrapper">
+                <label>Room Name Title</label>
+                <input type="text" id="newRoomNameInput" class="custom-input" placeholder="e.g., Tactical Elite Unit">
+            </div>
+            <div class="input-wrapper">
+                <label>Max Session Capacity Limit (2 - 15)</label>
+                <input type="number" id="newRoomCapInput" class="custom-input" value="12" min="2" max="15">
+            </div>
+            <div style="display:flex; gap:12px; margin-top:25px;">
+                <button class="btn-modern" onclick="executeRoomCreation()">INITIALIZE HUB</button>
+                <button class="btn-modern" style="background:#222538; color:white;" onclick="triggerModalState('createRoomModal', false)">ABORT</button>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="createRoomModal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 15px; color: var(--accent);">Setup Your Room</h3>
-            <div class="input-group">
-                <label>Room Name:</label>
-                <input type="text" id="roomNameInput" class="form-input" placeholder="e.g., Tactical Discussion">
-            </div>
-            <div class="input-group">
-                <label>Max Members (Min 2 - Max 15):</label>
-                <input type="number" id="roomMaxPlayers" class="form-input" value="10" min="2" max="15">
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn" onclick="createNewRoom()">Confirm</button>
-                <button class="btn" style="background:#444; color:white;" onclick="closeModal('createRoomModal')">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="challengeSettingsModal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 15px; color: #ff9f43;">⚔️ Challenge Settings</h3>
-            <div class="input-group">
-                <label>Questions Count:</label>
-                <select id="quizCountSelect" class="form-input">
-                    <option value="3">3 Questions (Speed Match)</option>
-                    <option value="5">5 Questions (Standard Match)</option>
+    <div class="overlay-backdrop" id="challengeSettingsModal">
+        <div class="modal-body-box">
+            <h3 style="margin-bottom: 15px; color: var(--accent);">⚔️ Deploy Combat Parameters</h3>
+            <div class="input-wrapper">
+                <label>Select Matrix Depth</label>
+                <select id="challengeMatchCountSelect" class="custom-input">
+                    <option value="3">3 Rapid Questions Mode</option>
+                    <option value="5">5 Extended Match Mode</option>
                 </select>
             </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn" style="background:#ff9f43; color:black;" onclick="sendChallengeMessage()">Deploy Challenge</button>
-                <button class="btn" style="background:#444; color:white;" onclick="closeModal('challengeSettingsModal')">Cancel</button>
+            <div style="display:flex; gap:12px; margin-top:25px;">
+                <button class="btn-modern" style="background:var(--accent); color:black;" onclick="transmitChallengeToFeed()">LAUNCH CHALLENGE</button>
+                <button class="btn-modern" style="background:#222538; color:white;" onclick="triggerModalState('challengeSettingsModal', false)">DISMISS</button>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="gmailLoadingModal">
-        <div class="modal-content loader-box">
+    <div class="overlay-backdrop" id="gmailProgressSystemModal">
+        <div class="modal-body-box" style="text-align:center; max-width: 320px;">
             <div class="spinner"></div>
-            <h3>Connecting Securely to Gmail...</h3>
+            <h3 style="color:var(--primary); font-size:16px;">Handshaking with Google OAuth...</h3>
         </div>
     </div>
 
     <script>
-        let currentUser = { name: "", avatar: "" };
-        let activeRoomId = null;
-        let hasCreatedRoom = false; // Restriction flag
+        let runtimeUser = { name: "", avatar: "" };
+        let activeHubId = null;
+        let localCreatedRoomFlag = false;
 
-        let roomsList = [
-            { id: "101", name: "Global Trivia Lounge 🧠", max: 15, current: 1, creator: "System_Bot" }
+        let memoryRoomsDatabase = [
+            { id: "9901", name: "Pro Strategy Hub Alpha 🛡️", max: 15, current: 1, host: "Elite_System_Bot" }
         ];
 
-        const quizDatabase = [
-            { q: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Mercury"], correct: 1 },
-            { q: "What is the capital city of France?", options: ["London", "Berlin", "Paris", "Madrid"], correct: 2 },
-            { q: "How many continents exist on Earth?", options: ["5", "6", "7", "8"], correct: 2 }
+        const matchTriviaCoreEngine = [
+            { q: "What is the primary operational architecture used by WebSockets?", options: ["Half-Duplex", "Full-Duplex", "Simplex", "Peer-To-Peer Only"], correct: 1 },
+            { q: "Which programming paradigm treats computation as the evaluation of mathematical functions?", options: ["Object-Oriented", "Procedural", "Functional", "Imperative"], correct: 2 },
+            { q: "What is the primary structural component used to secure deployment builds on Vercel?", options: ["Serverless Functions", "Docker Containers Only", "Virtual Machine Kernels", "Static Edge Distribution"], correct: 0 }
         ];
 
-        let currentQuizIndex = 0;
-        let currentScore = 0;
-        let selectedTotalQs = 3;
+        let indexQuizPointer = 0;
+        let cumulativeScoreXP = 0;
+        let ceilingQuizQuestions = 3;
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        // Custom High-End Dynamic Push Toast Notification system
+        function triggerPushNotification(msg, styleType = 'success') {
+            const container = document.getElementById('toastSystemContainer');
+            const card = document.createElement('div');
+            card.className = 'toast-card';
+            if (styleType === 'error') card.style.borderLeftColor = 'var(--danger)';
+            card.innerHTML = `<i class="fa-solid ${styleType === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> <span>${msg}</span>`;
+            container.appendChild(card);
+            setTimeout(() => { card.remove(); }, 4000);
         }
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('remove'); document.getElementById(id).classList.remove('active'); }
+        function triggerModalState(id, isActive) {
+            const node = document.getElementById(id);
+            if (isActive) node.classList.add('active');
+            else node.classList.remove('active');
+        }
 
-        // Preview local uploaded image file
-        function previewUserImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = document.getElementById('avatarPreview');
-                output.src = reader.result;
-                currentUser.avatar = reader.result; // Saved as base64 string
+        function processLocalImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const targetReader = new FileReader();
+            targetReader.onload = function() {
+                document.getElementById('avatarPreviewNode').src = targetReader.result;
+                runtimeUser.avatar = targetReader.result;
+                triggerPushNotification("Profile imagery cached successfully!");
             }
-            reader.readAsDataURL(event.target.files[0]);
+            targetReader.readAsDataURL(file);
         }
 
-        function loginPlatform(method) {
+        function authenticateUser(method) {
             if (method === 'gmail') {
-                openModal('gmailLoadingModal');
+                triggerModalState('gmailProgressSystemModal', true);
                 setTimeout(() => {
-                    closeModal('gmailLoadingModal');
-                    currentUser.name = "Google_User_" + Math.floor(100 + Math.random() * 900);
-                    if (!currentUser.avatar) {
-                        currentUser.avatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2345f3ff'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
-                    }
-                    proceedToDashboard();
-                }, 1800);
+                    triggerModalState('gmailProgressSystemModal', false);
+                    runtimeUser.name = "Google_User_" + Math.floor(1000 + Math.random() * 9000);
+                    assignFallbackAvatar();
+                    executeSystemLobbyEntry();
+                }, 1500);
             } else {
-                const nameIn = document.getElementById('usernameInput').value.trim();
-                if (!nameIn) return alert("Please type a username!");
-                currentUser.name = nameIn;
-                if (!currentUser.avatar) {
-                    currentUser.avatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c5a8ff'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+                const rawName = document.getElementById('playerNameInputField').value.trim();
+                if (!rawName) {
+                    triggerPushNotification("Authentication Error: Valid username identifier is mandatory.", "error");
+                    return;
                 }
-                proceedToDashboard();
+                runtimeUser.name = rawName;
+                assignFallbackAvatar();
+                executeSystemLobbyEntry();
             }
         }
 
-        function proceedToDashboard() {
-            document.getElementById('userHeaderAvatar').src = currentUser.avatar;
-            document.getElementById('userHeaderName').innerText = currentUser.name;
-            renderRoomsGrid();
-            showScreen('roomsScreen');
+        function assignFallbackAvatar() {
+            if (!runtimeUser.avatar) {
+                runtimeUser.avatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2345f3ff'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+            }
         }
 
-        function renderRoomsGrid() {
-            const grid = document.getElementById('roomsGrid');
+        function executeSystemLobbyEntry() {
+            document.getElementById('navbarProfileImage').src = runtimeUser.avatar;
+            document.getElementById('navbarProfileName').innerText = runtimeUser.name;
+            renderDynamicLobbyGrid();
+            showScreen('roomsScreen');
+            triggerPushNotification(`Session verified. Welcome back, ${runtimeUser.name}`);
+        }
+
+        function renderDynamicLobbyGrid() {
+            const grid = document.getElementById('lobbyRoomsDynamicGrid');
             grid.innerHTML = "";
-            roomsList.forEach(room => {
-                const isOwner = room.creator === currentUser.name;
+            memoryRoomsDatabase.forEach(room => {
+                const matchOwn = room.host === runtimeUser.name;
                 grid.innerHTML += `
-                    <div class="room-card" id="card_${room.id}">
+                    <div class="modern-room-card">
                         <div>
-                            ${isOwner ? '<span class="room-tag">My Created Room</span>' : ''}
-                            <h3>${room.name}</h3>
-                            <p style="color: var(--text-muted); font-size:12px; margin-top:5px;">Capacity: ${room.current}/${room.max}</p>
+                            ${matchOwn ? '<span style="font-size:11px; color:var(--primary); font-weight:700; text-transform:uppercase;">[ My Owned Instance ]</span>' : ''}
+                            <h3 style="margin-top:4px; font-size:17px; color:#fff;">${room.name}</h3>
+                            <p style="color:var(--text-muted); font-size:13px; margin-top:6px;"><i class="fa-solid fa-users"></i> Utilization: ${room.current} / ${room.max} slots</p>
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <button class="btn" style="padding:6px 12px;" onclick="joinRoomAction('${room.id}')">Join</button>
-                            ${isOwner ? `<button class="btn btn-danger" style="padding:6px 12px;" onclick="destroyRoom('${room.id}')">Delete</button>` : ''}
+                        <div style="display:flex; gap:10px; margin-top:20px;">
+                            <button class="btn-modern" style="padding:10px;" onclick="executeRoomJoinChain('${room.id}')">CONNECT</button>
+                            ${matchOwn ? `<button class="btn-modern" style="background:var(--danger); color:white; padding:10px; width:auto;" onclick="terminateActiveRoom('${room.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>
                 `;
             });
 
-            // Enforce single room creation rule visuals
-            const createBtn = document.getElementById('createNewRoomBtn');
-            if (hasCreatedRoom) {
-                createBtn.style.opacity = "0.5";
-                createBtn.title = "You can only maintain 1 active room.";
-            } else {
-                createBtn.style.opacity = "1";
-                createBtn.title = "";
-            }
+            const actionTrigger = document.getElementById('globalCreateRoomActionTrigger');
+            actionTrigger.disabled = localCreatedRoomFlag;
+            actionTrigger.style.opacity = localCreatedRoomFlag ? "0.4" : "1";
         }
 
-        function createNewRoom() {
-            if (hasCreatedRoom) {
-                closeModal('createRoomModal');
-                return alert("Violation: You are restricted to exactly one active custom room!");
+        function executeRoomCreation() {
+            const label = document.getElementById('newRoomNameInput').value.trim();
+            let limit = parseInt(document.getElementById('newRoomCapInput').value);
+
+            if (!label) {
+                triggerPushNotification("Validation Error: Arena requires an explicit title description.", "error");
+                return;
             }
+            if (isNaN(limit) || limit < 2) limit = 2;
+            if (limit > 15) limit = 15;
 
-            const name = document.getElementById('roomNameInput').value.trim();
-            let maxVal = parseInt(document.getElementById('roomMaxPlayers').value);
-
-            if (!name) return alert("Please declare a room name!");
+            const structuredId = Date.now().toString();
+            const payload = { id: structuredId, name: label, max: limit, current: 1, host: runtimeUser.name };
             
-            // Enforce capacity bounds strictly: 2 to 15
-            if (isNaN(maxVal) || maxVal < 2) maxVal = 2;
-            if (maxVal > 15) maxVal = 15;
-
-            const newId = Date.now().toString();
-            const newRoom = { id: newId, name: name, max: maxVal, current: 1, creator: currentUser.name };
-            
-            roomsList.push(newRoom);
-            hasCreatedRoom = true;
-            closeModal('createRoomModal');
-            renderRoomsGrid();
+            memoryRoomsDatabase.push(payload);
+            localCreatedRoomFlag = true;
+            triggerModalState('createRoomModal', false);
+            renderDynamicLobbyGrid();
+            triggerPushNotification("Infrastructure deployed successfully!");
         }
 
-        function destroyRoom(id) {
-            roomsList = roomsList.filter(r => r.id !== id);
-            hasCreatedRoom = false;
-            renderRoomsGrid();
-            if (activeRoomId === id) {
+        function terminateActiveRoom(id) {
+            memoryRoomsDatabase = memoryRoomsDatabase.filter(r => r.id !== id);
+            localCreatedRoomFlag = false;
+            renderDynamicLobbyGrid();
+            triggerPushNotification("Selected room instance has been destroyed.", "error");
+            if (activeHubId === id) {
                 showScreen('roomsScreen');
-                alert("The room you were in was closed by the owner.");
             }
         }
 
-        function joinRoomAction(id) {
-            activeRoomId = id;
-            const room = roomsList.find(r => r.id === id);
-            document.getElementById('currentRoomTitle').innerText = room.name;
+        function executeRoomJoinChain(id) {
+            activeHubId = id;
+            const TargetObj = memoryRoomsDatabase.find(r => r.id === id);
+            document.getElementById('activeWorkspaceRoomTitle').innerText = TargetObj.name.toUpperCase();
 
-            // Header Action Area setup for clean dynamic deletion inside chat
-            const actionArea = document.getElementById('headerActionArea');
-            if (room.creator === currentUser.name) {
-                actionArea.innerHTML = `<button class="btn btn-danger" style="padding: 6px 12px;" onclick="destroyRoom('${room.id}')">Terminate Room</button>`;
+            const actionMount = document.getElementById('runtimeHeaderActionMount');
+            if (TargetObj.host === runtimeUser.name) {
+                actionMount.innerHTML = `<button class="btn-modern" style="background:var(--danger); color:white; padding: 8px 16px;" onclick="terminateActiveRoom('${TargetObj.id}')">TERMINATE ARCHITECTURE</button>`;
             } else {
-                actionArea.innerHTML = `<button class="btn" style="width:auto; padding: 6px 12px;" onclick="document.getElementById('membersSidebar').classList.toggle('active')">👥 View Active</button>`;
+                actionMount.innerHTML = `<button class="btn-modern" style="width:auto; padding: 8px 16px; background:#1a1d2e;" onclick="document.getElementById('workspaceRightSidebar').classList.toggle('active')"><i class="fa-solid fa-sidebar"></i> TOGGLE PANEL</button>`;
             }
 
-            document.getElementById('chatMessages').innerHTML = `<div class="message system-msg">Welcome to ${room.name}. Let the matches begin!</div>`;
+            document.getElementById('chatMessageStreamBox').innerHTML = `<div class="system-banner">Secure Web Session Layer Established. Welcome to the chat ecosystem.</div>`;
             
-            // Render basic sidebar members dynamically
-            document.getElementById('sidebarMembersList').innerHTML = `
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                    <img src="${currentUser.avatar}" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">
-                    <span style="font-size:13px;">${currentUser.name} (You)</span>
-                </div>
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                    <span style="font-size:18px;">🤖</span><span style="font-size:13px;">Matchmaking_Bot</span>
+            document.getElementById('sidebarDynamicMembersBox').innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px; margin-top:12px;">
+                    <img src="${runtimeUser.avatar}" style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
+                    <span style="font-size:14px; font-weight:600;">${runtimeUser.name} <span style="color:var(--primary); font-size:10px;">[YOU]</span></span>
                 </div>
             `;
 
             showScreen('chatScreen');
         }
 
-        function leaveRoom() {
-            activeRoomId = null;
+        function leaveRoomContext() {
+            activeHubId = null;
             showScreen('roomsScreen');
         }
 
-        function sendChatMessage() {
-            const input = document.getElementById('chatInputField');
-            const txt = input.value.trim();
-            if (!txt) return;
+        function dispatchUserMessage() {
+            const box = document.getElementById('workspaceMainTextInput');
+            const data = box.value.trim();
+            if (!data) return;
 
-            appendMsgBox(currentUser.name, txt, 'outgoing');
-            input.value = "";
+            appendChatBubble(runtimeUser.name, data, 'me');
+            box.value = "";
         }
 
-        function appendMsgBox(sender, text, structureType) {
-            const container = document.getElementById('chatMessages');
-            const el = document.createElement('div');
-            el.className = `message ${structureType}`;
-            if (structureType !== 'system-msg') {
-                el.innerHTML = `<div class="sender">${sender}</div><div>${text}</div>`;
+        function appendChatBubble(author, content, directionClass) {
+            const container = document.getElementById('chatMessageStreamBox');
+            const wrapper = document.createElement('div');
+            wrapper.className = `chat-bubble-wrap ${directionClass}`;
+            
+            if (directionClass !== 'system-msg') {
+                wrapper.innerHTML = `<span class="chat-sender-tag">${author}</span><div class="bubble-core">${content}</div>`;
             } else {
-                el.innerHTML = text;
+                wrapper.className = "system-banner";
+                wrapper.innerHTML = content;
             }
-            container.appendChild(el);
+            
+            container.appendChild(wrapper);
             container.scrollTop = container.scrollHeight;
         }
 
-        function sendChallengeMessage() {
-            closeModal('challengeSettingsModal');
-            selectedTotalQs = parseInt(document.getElementById('quizCountSelect').value);
+        function transmitChallengeToFeed() {
+            triggerModalState('challengeSettingsModal', false);
+            ceilingQuizQuestions = parseInt(document.getElementById('challengeMatchCountSelect').value);
 
-            appendMsgBox("SYSTEM MATCH", `${currentUser.name} queued up a Live Quiz Challenge!`, 'system-msg');
+            appendChatBubble("SYSTEM MATRIX", `⚠️ A Live Trivia Combat Card has been initialized by ${runtimeUser.name}!`, 'system-msg');
 
-            const container = document.getElementById('chatMessages');
-            const challengeWidget = document.createElement('div');
-            challengeWidget.style.cssText = "background:#1f2833; padding:12px; border-radius:8px; text-align:center; margin:10px auto; border:1px solid #ff9f43; width:100%; max-width:280px;";
-            challengeWidget.innerHTML = `
-                <p style="font-size:12px; margin-bottom:8px;">Match Request (${selectedTotalQs} Questions) by ${currentUser.name}</p>
-                <button class="btn" style="background:#ff9f43; color:black; font-size:12px; padding:4px 10px;" onclick="interceptChallengeAccept(this, '${currentUser.name}')">Accept Challenge</button>
+            const container = document.getElementById('chatMessageStreamBox');
+            const cardWidget = document.createElement('div');
+            cardWidget.style.cssText = "background: var(--bg-surface); padding: 20px; border-radius: 16px; text-align: center; margin: 15px auto; border: 1px solid var(--accent); width: 100%; max-width: 340px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);";
+            cardWidget.innerHTML = `
+                <h4 style="color:var(--accent); font-size:14px; margin-bottom:6px;">TRIVIA DUEL READY</h4>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Length: ${ceilingQuizQuestions} Nodes | Creator: ${runtimeUser.name}</p>
+                <button class="btn-modern" style="background:var(--accent); color:black; font-size:13px; padding:8px 16px;" onclick="interceptCombatAcceptance(this, '${runtimeUser.name}')">ACCEPT ENGAGEMENT</button>
             `;
-            container.appendChild(challengeWidget);
+            container.appendChild(cardWidget);
             container.scrollTop = container.scrollHeight;
         }
 
-        // Logic check: Intercepting self-challenges strictly
-        function interceptChallengeAccept(element, authorName) {
-            if (currentUser.name === authorName) {
-                alert("Operation Denied: You cannot accept or play your own challenge card! Please await an opponent.");
+        function interceptCombatAcceptance(element, hostName) {
+            if (runtimeUser.name === hostName) {
+                triggerPushNotification("Security Restriction: You are blocked from accepting your own matching instance.", "error");
                 return;
             }
             element.parentElement.remove();
-            triggerQuizGameplay();
+            initializeCombatModule();
         }
 
-        function triggerQuizGameplay() {
-            currentQuizIndex = 0;
-            currentScore = 0;
+        function initializeCombatModule() {
+            indexQuizPointer = 0;
+            cumulativeScoreXP = 0;
             showScreen('quizScreen');
-            loadNextQuizQuestion();
+            renderQuizNode();
         }
 
-        function loadNextQuizQuestion() {
-            if (currentQuizIndex >= selectedTotalQs || currentQuizIndex >= quizDatabase.length) {
-                terminateQuizSession();
+        function renderQuizNode() {
+            if (indexQuizPointer >= ceilingQuizQuestions || indexQuizPointer >= matchTriviaCoreEngine.length) {
+                concludeCombatSession();
                 return;
             }
 
-            document.getElementById('quizProgress').innerText = `Question: ${currentQuizIndex + 1} of ${selectedTotalQs}`;
-            document.getElementById('quizScore').innerText = `Score: ${currentScore}`;
+            document.getElementById('runtimeQuizProgressMeta').innerText = `QUESTION: ${indexQuizPointer + 1} / ${ceilingQuizQuestions}`;
+            document.getElementById('runtimeQuizScoreMeta').innerText = `SCORE: ${cumulativeScoreXP} XP`;
 
-            const activeQ = quizDatabase[currentQuizIndex];
-            document.getElementById('questionText').innerText = activeQ.q;
+            const currentObj = matchTriviaCoreEngine[indexQuizPointer];
+            document.getElementById('quizCoreQuestionText').innerText = currentObj.q;
 
-            const grid = document.getElementById('optionsGrid');
+            const grid = document.getElementById('quizAnswersDynamicGrid');
             grid.innerHTML = "";
-            activeQ.options.forEach((opt, idx) => {
-                grid.innerHTML += `<button class="option-btn" onclick="evaluateSelection(${idx})">${opt}</button>`;
+            currentObj.options.forEach((opt, idx) => {
+                grid.innerHTML += `<button class="btn-modern" style="background:var(--bg-card); color:white; border:1px solid rgba(255,255,255,0.05); text-align:left;" onclick="evaluateCombatSelection(${idx})">${opt}</button>`;
             });
         }
 
-        function evaluateSelection(chosenIdx) {
-            if (chosenIdx === quizDatabase[currentQuizIndex].correct) {
-                currentScore += 10;
+        function evaluateCombatSelection(selectedIdx) {
+            if (selectedIdx === matchTriviaCoreEngine[indexQuizPointer].correct) {
+                cumulativeScoreXP += 100;
+                triggerPushNotification("+100 XP Secured!");
+            } else {
+                triggerPushNotification("Answer Deflected. 0 XP awarded.", "error");
             }
-            currentQuizIndex++;
-            loadNextQuizQuestion();
+            indexQuizPointer++;
+            renderQuizNode();
         }
 
-        function terminateQuizSession() {
+        function concludeCombatSession() {
             showScreen('chatScreen');
-            appendMsgBox("🏆 COMPETITION REPORT", `🎉 Match Completed! Player ${currentUser.name} secured the leaderboard with ${currentScore} points! 🔥`, 'system-msg');
+            appendChatBubble("🏆 COMPETITION REPORT", `⚡ Combat Resolution: Player <b>${runtimeUser.name}</b> dominated the instance and finalized with <b>${cumulativeScoreXP} XP</b>! 🔥`, 'system-msg');
         }
 
-        document.getElementById('chatInputField').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') sendChatMessage();
+        document.getElementById('workspaceMainTextInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') dispatchUserMessage();
         });
     </script>
 </body>
