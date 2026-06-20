@@ -3,801 +3,561 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>X-Challenge Pro | Ultimate Chat & Trivia Arena</title>
+    <title>Gartic Chat Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            --bg-base: #06070d;
-            --bg-surface: #11131e;
-            --bg-card: #1a1d2e;
-            --primary: #45f3ff;
-            --primary-glow: rgba(69, 243, 255, 0.4);
-            --secondary: #b57cff;
-            --accent: #ff9f43;
-            --text-main: #ffffff;
-            --text-muted: #8e94ad;
-            --danger: #ff4d6d;
-            --success: #2ecc71;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-dark: #1e2538;          /* نفس لون خلفية الصور بالملي */
+            --bg-card: #283046;          /* لون الكروت الداخلي */
+            --primary-yellow: #ffc107;   /* أصفر زر Play المريح */
+            --btn-blue: #2196f3;         /* أزرق زر الرفع */
+            --btn-green: #28c76f;        /* أخضر زر الـ Join */
+            --text-white: #ffffff;
+            --text-muted: #8c94a5;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Nunito', sans-serif;
         }
 
         body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
+            background-color: var(--bg-dark);
+            color: var(--text-white);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        /* Unified Screens framework */
         .screen {
             display: none;
             flex: 1;
-            height: 100%;
             width: 100%;
-            overflow: hidden;
+            height: 100%;
+            overflow-y: auto;
+            padding: 20px;
         }
 
         .screen.active {
             display: flex;
             flex-direction: column;
-        }
-
-        /* 1. Cinematic Login Screen */
-        .login-wrapper {
-            display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            background: radial-gradient(circle at center, #1a1235 0%, var(--bg-base) 70%);
-            padding: 20px;
         }
 
-        .login-card {
-            background: rgba(17, 19, 30, 0.75);
-            border: 1px solid rgba(69, 243, 255, 0.15);
-            backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 24px;
-            width: 100%;
-            max-width: 440px;
+        /* --- 1. واجهة التسجيل المحدثة لتطابق الصورة --- */
+        .brand-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--primary-yellow);
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            margin-bottom: 5px;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
-        .login-card h2 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+        .brand-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .avatar-uploader {
+        .main-auth-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .avatar-area {
             position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 25px auto;
-            cursor: pointer;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
         }
 
-        .avatar-uploader img {
+        .avatar-img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
+            background: #151a26;
             object-fit: cover;
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-            transition: var(--transition);
         }
 
-        .avatar-uploader:hover img {
-            transform: scale(1.05);
-            border-color: var(--secondary);
+        .avatar-buttons-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
         }
 
-        .upload-icon-tag {
-            position: absolute;
-            bottom: 0; right: 0;
-            background: var(--primary);
-            color: #000;
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            transition: 0.2s;
         }
 
-        .input-wrapper {
-            margin-bottom: 20px;
+        .btn-random { background: #3d465e; }
+        .btn-upload { background: var(--btn-blue); }
+
+        .input-title {
             text-align: left;
-        }
-
-        .input-wrapper label {
-            display: block;
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 700;
             color: var(--text-muted);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding-left: 4px;
         }
 
-        .custom-input {
+        .name-input-field {
             width: 100%;
-            padding: 14px 16px;
-            background: rgba(6, 7, 13, 0.6);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #1e2538;
+            border: 1px solid #3d465e;
+            padding: 14px;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        .btn-play {
+            background: var(--primary-yellow);
+            color: #111;
+            font-weight: 800;
+            font-size: 18px;
+            padding: 14px;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #c79600;
+            transition: 0.1s;
+        }
+
+        .btn-play:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .divider {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #3d465e; }
+
+        .btn-gmail {
+            background: #2d3548;
+            width: 100%;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* --- 2. واجهة الرومات لتطابق الصورة --- */
+        .rooms-header {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rooms-list-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .room-row-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .room-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-title-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .room-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .room-category-tag {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .btn-join {
+            background: var(--btn-green);
+            color: white;
+            font-weight: 700;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* --- 3. واجهة الشات المتطابقة --- */
+        .chat-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            background: var(--bg-dark);
+        }
+
+        .chat-top-navbar {
+            background: var(--bg-card);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .players-dropdown {
+            background: #1e2538;
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .players-count-badge {
+            background: var(--primary-yellow);
+            color: black;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        .chat-messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center; /* لضمان توسط كبسولات النظام */
+        }
+
+        /* كبسولة الدخول والخروج المنتظرة مثل الصورة تماماً */
+        .status-capsule-chip {
+            background: rgba(33, 150, 243, 0.12);
+            color: #64b5f6;
+            border: 1px solid rgba(33, 150, 243, 0.25);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+            margin: 5px 0;
+            display: inline-block;
+        }
+
+        .status-capsule-chip.leave {
+            background: rgba(239, 83, 80, 0.12);
+            color: #ef5350;
+            border: 1px solid rgba(239, 83, 80, 0.25);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* صندوق الشات والارسال المتطابق */
+        .sticky-bottom-dock {
+            padding: 15px 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: var(--bg-dark);
+        }
+
+        .message-input-node {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid #3d465e;
+            padding: 15px;
             border-radius: 12px;
             color: white;
             font-size: 15px;
             outline: none;
-            transition: var(--transition);
         }
 
-        .custom-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(69, 243, 255, 0.1);
-        }
-
-        .btn-modern {
-            background: var(--primary);
-            color: #06070d;
-            font-weight: 700;
+        .btn-send-message {
+            background: var(--btn-blue);
+            color: white;
             border: none;
-            padding: 14px 24px;
+            width: 50px;
+            height: 50px;
             border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
             cursor: pointer;
-            width: 100%;
-            font-size: 15px;
-            letter-spacing: 0.5px;
-            transition: var(--transition);
         }
 
-        .btn-modern:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px var(--primary-glow);
-        }
-
-        .btn-google-login {
-            background: #ffffff;
-            color: #111;
-            margin-top: 12px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-
-        /* App Navbar Header */
-        .app-header {
-            background: var(--bg-surface);
-            padding: 16px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            z-index: 10;
-        }
-
-        /* 2. Rooms Dashboard Layout */
-        .dashboard-container {
-            padding: 32px;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .dashboard-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .modern-room-card {
-            background: var(--bg-surface);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 18px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: var(--transition);
-        }
-
-        .modern-room-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        /* 3. High-Tier Workspace Chat Layout */
-        .workspace-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .chat-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #090a10;
-            height: 100%;
-        }
-
-        .chat-feed {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .chat-bubble-wrap {
-            display: flex;
-            flex-direction: column;
-            max-width: 65%;
-        }
-
-        .chat-bubble-wrap.me { align-self: flex-end; align-items: flex-end; }
-        .chat-bubble-wrap.them { align-self: flex-start; align-items: flex-start; }
-
-        .chat-sender-tag {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-            font-weight: 500;
-            padding: 0 4px;
-        }
-
-        .bubble-core {
-            padding: 12px 18px;
-            border-radius: 16px;
-            font-size: 14px;
-            line-height: 1.5;
-            word-break: break-word;
-        }
-
-        .chat-bubble-wrap.me .bubble-core {
-            background: linear-gradient(135deg, #007a61 0%, #005c4b 100%);
-            border-bottom-right-radius: 4px;
-        }
-
-        .chat-bubble-wrap.them .bubble-core {
-            background: var(--bg-card);
-            border-bottom-left-radius: 4px;
-        }
-
-        .system-banner {
-            align-self: center;
-            background: rgba(181, 124, 255, 0.08);
-            border: 1px dashed rgba(181, 124, 255, 0.4);
-            color: var(--secondary);
-            font-size: 13px;
-            padding: 10px 24px;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 80%;
-        }
-
-        /* The Sticky Persistent Input Workspace Area */
-        .workspace-input-dock {
-            background: var(--bg-surface);
-            padding: 16px 24px;
-            display: flex;
-            gap: 14px;
-            align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .pulse-challenge-btn {
-            background: var(--accent);
-            color: #000;
-            font-size: 20px;
-            width: 48px; height: 48px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            border: none; cursor: pointer; flex-shrink: 0;
-            transition: var(--transition);
-            box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.4);
-            animation: pulse-effect 2s infinite;
-        }
-
-        @keyframes pulse-effect {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 159, 67, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
-        }
-
-        /* Sidebar Panel */
-        .right-sidebar {
-            width: 280px;
-            background: var(--bg-surface);
-            border-left: 1px solid rgba(255,255,255,0.05);
-            padding: 24px;
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .right-sidebar.active { display: flex; }
-
-        /* Dynamic Modals Overlays Frame */
-        .overlay-backdrop {
+        /* لودر الجيميل */
+        .gmail-loader-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(3, 4, 7, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.8);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            padding: 20px;
+            z-index: 9999;
         }
-
-        .overlay-backdrop.active { display: flex; }
-
-        .modal-body-box {
-            background: var(--bg-surface);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 32px;
-            border-radius: 24px;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.1);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            border-left-color: var(--primary-yellow);
+            animation: spin 1s linear infinite;
         }
-
-        /* Toast Popup Notifications Engine */
-        #toastSystemContainer {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast-card {
-            background: var(--bg-card);
-            border-left: 4px solid var(--primary);
-            color: white;
-            padding: 14px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: slideIn 0.3s ease forwards;
-        }
-
-        @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
-
-        /* 4. Gamified Quiz Module Layout */
-        .quiz-view-box {
-            background: var(--bg-surface);
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 30px rgba(69, 243, 255, 0.15);
-            width: 100%;
-            max-width: 550px;
-            padding: 32px;
-            border-radius: 24px;
-            text-align: center;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="toastSystemContainer"></div>
+    <div class="gmail-loader-overlay" id="gmailLoader">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 15px; font-weight: 600;">Sign in with Google...</p>
+        </div>
+    </div>
 
-    <div id="loginScreen" class="screen active">
-        <div class="login-wrapper">
-            <div class="login-card">
-                <h2>X-CHALLENGE PRO</h2>
-                <p style="color: var(--text-muted); font-size:14px;">Next-Gen Elite Social Gaming Arena</p>
-                
-                <div class="avatar-uploader" onclick="document.getElementById('hardwareFileInput').click()" title="Upload Custom Profile Picture">
-                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238e94ad'><path d='M12 12c2.21 0 4-1.79 4-4s1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>" id="avatarPreviewNode">
-                    <div class="upload-icon-tag"><i class="fa-solid fa-plus"></i></div>
-                </div>
-                <input type="file" id="hardwareFileInput" accept="image/*" style="display:none;" onchange="processLocalImage(event)">
+    <div id="authScreen" class="screen active">
+        <h1 class="brand-title">Gartic Chat</h1>
+        <p class="brand-subtitle">Join rooms and chat with friends</p>
 
-                <div class="input-wrapper">
-                    <label>Player Nickname</label>
-                    <input type="text" id="playerNameInputField" class="custom-input" placeholder="e.g., Rayan_Alpha">
-                </div>
-                
-                <button class="btn-modern" onclick="authenticateUser('standard')">ENTER ARENA</button>
-                <button class="btn-modern btn-google-login" onclick="authenticateUser('gmail')">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="16"> CONTINUE WITH GMAIL
-                </button>
+        <div class="main-auth-card">
+            <div class="avatar-area">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffc107'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" class="avatar-img" id="userAvatarPreview">
             </div>
+
+            <div class="avatar-buttons-row">
+                <button class="btn-action btn-random" onclick="generateRandomAvatar()"><i class="fa-solid fa-shuffle"></i> Random</button>
+                <button class="btn-action btn-upload" onclick="document.getElementById('fileAttachmentInput').click()"><i class="fa-solid fa-upload"></i> Upload</button>
+            </div>
+            <input type="file" id="fileAttachmentInput" accept="image/*" style="display:none;" onchange="handleImageFile(event)">
+
+            <div class="input-title">Your Name</div>
+            <input type="text" id="usernameInputNode" class="name-input-field" placeholder="Type your name...">
+
+            <button class="btn-play" onclick="triggerLogin('normal')">Play!</button>
+            
+            <div class="divider">or</div>
+
+            <button class="btn-gmail" onclick="triggerLogin('gmail')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="16"> Sign in with Google
+            </button>
         </div>
     </div>
 
     <div id="roomsScreen" class="screen">
-        <header class="app-header">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <img id="navbarProfileImage" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
-                <span id="navbarProfileName" style="font-weight: 600; font-size:15px; color:#fff;"></span>
-            </div>
-            <h2>METAVERSE LOBBY</h2>
-            <button class="btn-modern" id="globalCreateRoomActionTrigger" style="width:auto; padding: 8px 16px;" onclick="triggerModalState('createRoomModal', true)">+ CREATE ROOM</button>
-        </header>
-        <div class="dashboard-container">
-            <div class="dashboard-top">
-                <h3 style="font-size: 16px; color: var(--text-muted);">LIVE GAMING AREAS</h3>
-            </div>
-            <div class="grid-layout" id="lobbyRoomsDynamicGrid"></div>
+        <div class="rooms-header">
+            <h2 style="font-size: 28px; font-weight: 800;">Rooms</h2>
+            <span style="color: var(--text-muted);" id="roomCounterMeta">3 rooms available</span>
         </div>
-    </div>
 
-    <div id="chatScreen" class="screen">
-        <header class="app-header">
-            <button class="btn-modern" style="width:auto; background:#222538; color:white; padding: 8px 16px;" onclick="leaveRoomContext()">⬅ LEAVE HUB</button>
-            <h2 id="activeWorkspaceRoomTitle" style="color: var(--secondary)">ACTIVE ARENA</h2>
-            <div id="runtimeHeaderActionMount"></div>
-        </header>
-        <div class="workspace-container">
-            <div class="chat-panel">
-                <div class="chat-feed" id="chatMessageStreamBox"></div>
-                
-                <div class="workspace-input-dock">
-                    <button class="pulse-challenge-btn" title="Launch Live Trivia Challenge" onclick="triggerModalState('challengeSettingsModal', true)">⚔️</button>
-                    <input type="text" id="workspaceMainTextInput" class="custom-input" style="margin-bottom:0;" placeholder="Broadcast a secure message to the room...">
-                    <button class="btn-modern" style="width: 100px;" onclick="dispatchUserMessage()">SEND</button>
+        <div class="rooms-list-wrapper">
+            <div class="room-row-card">
+                <div class="room-row-top">
+                    <div class="room-title-badge">
+                        <div class="room-dot" style="background: #28c76f;"></div>
+                        <span>Animals</span>
+                    </div>
+                    <div class="room-category-tag" style="color: #28c76f;">Animals</div>
                 </div>
+                <div style="color: var(--text-muted); font-size: 14px;"><i class="fa-solid fa-users"></i> 0 / 20</div>
+                <button class="btn-join" onclick="enterRoom('Animals')">Join</button>
             </div>
-            
-            <div class="right-sidebar" id="workspaceRightSidebar">
-                <h3 style="font-size:13px; color: var(--text-muted);">CONNECTED USERS</h3>
-                <div id="sidebarDynamicMembersBox"></div>
+
+            <div class="room-row-card">
+                <div class="room-row-top">
+                    <div class="room-title-badge">
+                        <div class="room-dot" style="background: #ff9f43;"></div>
+                        <span>Food</span>
+                    </div>
+                    <div class="room-category-tag" style="color: #ff9f43;">Food</div>
+                </div>
+                <div style="color: var(--text-muted); font-size: 14px;"><i class="fa-solid fa-users"></i> 0 / 20</div>
+                <button class="btn-join" onclick="enterRoom('Food')">Join</button>
+            </div>
+
+            <div class="room-row-card">
+                <div class="room-row-top">
+                    <div class="room-title-badge">
+                        <div class="room-dot" style="background: #2196f3;"></div>
+                        <span>Sports</span>
+                    </div>
+                    <div class="room-category-tag" style="color: #2196f3;">Sports</div>
+                </div>
+                <div style="color: var(--text-muted); font-size: 14px;"><i class="fa-solid fa-users"></i> 0 / 20</div>
+                <button class="btn-join" onclick="enterRoom('Sports')">Join</button>
             </div>
         </div>
     </div>
 
-    <div id="quizScreen" class="screen" style="justify-content:center; align-items:center; background:#080910;">
-        <div class="quiz-view-box">
-            <div style="display:flex; justify-content: space-between; margin-bottom: 20px; color: var(--primary); font-size:13px; font-weight:600;">
-                <span id="runtimeQuizProgressMeta">QUESTION: 1/3</span>
-                <span id="runtimeQuizScoreMeta">SCORE: 0 XP</span>
+    <div id="chatScreen" class="screen" style="padding:0;">
+        <div class="chat-layout">
+            <div class="chat-top-navbar">
+                <button style="background:none; border:none; color:white; font-size:20px; cursor:pointer;" onclick="exitChat()"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="players-dropdown">
+                    <i class="fa-solid fa-users" style="color: var(--text-muted);"></i>
+                    <span>Players</span>
+                    <span class="players-count-badge" id="playerBadgeCount">1</span>
+                </div>
+                <div style="width:20px;"></div>
             </div>
-            <h2 id="quizCoreQuestionText" style="margin-bottom: 24px; font-size: 20px; color:#fff;">Acquiring Question Content...</h2>
-            <div class="options-grid" id="quizAnswersDynamicGrid"></div>
-        </div>
-    </div>
 
-    <div class="overlay-backdrop" id="createRoomModal">
-        <div class="modal-body-box">
-            <h3 style="margin-bottom: 15px; color: var(--primary);">Configure Room Architecture</h3>
-            <div class="input-wrapper">
-                <label>Room Name Title</label>
-                <input type="text" id="newRoomNameInput" class="custom-input" placeholder="e.g., Tactical Elite Unit">
-            </div>
-            <div class="input-wrapper">
-                <label>Max Session Capacity Limit (2 - 15)</label>
-                <input type="number" id="newRoomCapInput" class="custom-input" value="12" min="2" max="15">
-            </div>
-            <div style="display:flex; gap:12px; margin-top:25px;">
-                <button class="btn-modern" onclick="executeRoomCreation()">INITIALIZE HUB</button>
-                <button class="btn-modern" style="background:#222538; color:white;" onclick="triggerModalState('createRoomModal', false)">ABORT</button>
-            </div>
-        </div>
-    </div>
+            <div class="chat-messages-container" id="chatMessageStream"></div>
 
-    <div class="overlay-backdrop" id="challengeSettingsModal">
-        <div class="modal-body-box">
-            <h3 style="margin-bottom: 15px; color: var(--accent);">⚔️ Deploy Combat Parameters</h3>
-            <div class="input-wrapper">
-                <label>Select Matrix Depth</label>
-                <select id="challengeMatchCountSelect" class="custom-input">
-                    <option value="3">3 Rapid Questions Mode</option>
-                    <option value="5">5 Extended Match Mode</option>
-                </select>
+            <div class="sticky-bottom-dock">
+                <input type="text" id="chatInputMessageNode" class="message-input-node" placeholder="Type a message...">
+                <button class="btn-send-message" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
-            <div style="display:flex; gap:12px; margin-top:25px;">
-                <button class="btn-modern" style="background:var(--accent); color:black;" onclick="transmitChallengeToFeed()">LAUNCH CHALLENGE</button>
-                <button class="btn-modern" style="background:#222538; color:white;" onclick="triggerModalState('challengeSettingsModal', false)">DISMISS</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="overlay-backdrop" id="gmailProgressSystemModal">
-        <div class="modal-body-box" style="text-align:center; max-width: 320px;">
-            <div class="spinner"></div>
-            <h3 style="color:var(--primary); font-size:16px;">Handshaking with Google OAuth...</h3>
         </div>
     </div>
 
     <script>
-        let runtimeUser = { name: "", avatar: "" };
-        let activeHubId = null;
-        let localCreatedRoomFlag = false;
+        let userData = { name: "", avatar: "" };
 
-        let memoryRoomsDatabase = [
-            { id: "9901", name: "Pro Strategy Hub Alpha 🛡️", max: 15, current: 1, host: "Elite_System_Bot" }
-        ];
-
-        const matchTriviaCoreEngine = [
-            { q: "What is the primary operational architecture used by WebSockets?", options: ["Half-Duplex", "Full-Duplex", "Simplex", "Peer-To-Peer Only"], correct: 1 },
-            { q: "Which programming paradigm treats computation as the evaluation of mathematical functions?", options: ["Object-Oriented", "Procedural", "Functional", "Imperative"], correct: 2 },
-            { q: "What is the primary structural component used to secure deployment builds on Vercel?", options: ["Serverless Functions", "Docker Containers Only", "Virtual Machine Kernels", "Static Edge Distribution"], correct: 0 }
-        ];
-
-        let indexQuizPointer = 0;
-        let cumulativeScoreXP = 0;
-        let ceilingQuizQuestions = 3;
-
-        // Custom High-End Dynamic Push Toast Notification system
-        function triggerPushNotification(msg, styleType = 'success') {
-            const container = document.getElementById('toastSystemContainer');
-            const card = document.createElement('div');
-            card.className = 'toast-card';
-            if (styleType === 'error') card.style.borderLeftColor = 'var(--danger)';
-            card.innerHTML = `<i class="fa-solid ${styleType === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> <span>${msg}</span>`;
-            container.appendChild(card);
-            setTimeout(() => { card.remove(); }, 4000);
+        function showActiveScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function triggerModalState(id, isActive) {
-            const node = document.getElementById(id);
-            if (isActive) node.classList.add('active');
-            else node.classList.remove('active');
-        }
-
-        function processLocalImage(event) {
+        function handleImageFile(event) {
             const file = event.target.files[0];
-            if (!file) return;
-            const targetReader = new FileReader();
-            targetReader.onload = function() {
-                document.getElementById('avatarPreviewNode').src = targetReader.result;
-                runtimeUser.avatar = targetReader.result;
-                triggerPushNotification("Profile imagery cached successfully!");
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    document.getElementById('userAvatarPreview').src = reader.result;
+                    userData.avatar = reader.result;
+                };
+                reader.readAsDataURL(file);
             }
-            targetReader.readAsDataURL(file);
         }
 
-        function authenticateUser(method) {
-            if (method === 'gmail') {
-                triggerModalState('gmailProgressSystemModal', true);
+        function generateRandomAvatar() {
+            const randomId = Math.floor(Math.random() * 1000);
+            const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${randomId}`;
+            document.getElementById('userAvatarPreview').src = url;
+            userData.avatar = url;
+        }
+
+        function triggerLogin(type) {
+            if (type === 'gmail') {
+                document.getElementById('gmailLoader').style.display = 'flex';
                 setTimeout(() => {
-                    triggerModalState('gmailProgressSystemModal', false);
-                    runtimeUser.name = "Google_User_" + Math.floor(1000 + Math.random() * 9000);
-                    assignFallbackAvatar();
-                    executeSystemLobbyEntry();
+                    document.getElementById('gmailLoader').style.display = 'none';
+                    userData.name = "Google_User_" + Math.floor(10 + Math.random() * 90);
+                    showActiveScreen('roomsScreen');
                 }, 1500);
             } else {
-                const rawName = document.getElementById('playerNameInputField').value.trim();
-                if (!rawName) {
-                    triggerPushNotification("Authentication Error: Valid username identifier is mandatory.", "error");
-                    return;
-                }
-                runtimeUser.name = rawName;
-                assignFallbackAvatar();
-                executeSystemLobbyEntry();
+                const enteredName = document.getElementById('usernameInputNode').value.trim();
+                if (!enteredName) return alert("Please enter your name first!");
+                userData.name = enteredName;
+                showActiveScreen('roomsScreen');
             }
         }
 
-        function assignFallbackAvatar() {
-            if (!runtimeUser.avatar) {
-                runtimeUser.avatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2345f3ff'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
-            }
+        function enterRoom(roomName) {
+            showActiveScreen('chatScreen');
+            const stream = document.getElementById('chatMessageStream');
+            stream.innerHTML = ""; // تنظيف الغرفة
+
+            // إضافة كبسولة الدخول الفورية الاحترافية مثل الصورة تماماً
+            const capsule = document.createElement('div');
+            capsule.className = 'status-capsule-chip';
+            capsule.innerHTML = `${userData.name} joined the room`;
+            stream.appendChild(capsule);
         }
 
-        function executeSystemLobbyEntry() {
-            document.getElementById('navbarProfileImage').src = runtimeUser.avatar;
-            document.getElementById('navbarProfileName').innerText = runtimeUser.name;
-            renderDynamicLobbyGrid();
-            showScreen('roomsScreen');
-            triggerPushNotification(`Session verified. Welcome back, ${runtimeUser.name}`);
-        }
+        function sendMessage() {
+            const input = document.getElementById('chatInputMessageNode');
+            const text = input.value.trim();
+            if (!text) return;
 
-        function renderDynamicLobbyGrid() {
-            const grid = document.getElementById('lobbyRoomsDynamicGrid');
-            grid.innerHTML = "";
-            memoryRoomsDatabase.forEach(room => {
-                const matchOwn = room.host === runtimeUser.name;
-                grid.innerHTML += `
-                    <div class="modern-room-card">
-                        <div>
-                            ${matchOwn ? '<span style="font-size:11px; color:var(--primary); font-weight:700; text-transform:uppercase;">[ My Owned Instance ]</span>' : ''}
-                            <h3 style="margin-top:4px; font-size:17px; color:#fff;">${room.name}</h3>
-                            <p style="color:var(--text-muted); font-size:13px; margin-top:6px;"><i class="fa-solid fa-users"></i> Utilization: ${room.current} / ${room.max} slots</p>
-                        </div>
-                        <div style="display:flex; gap:10px; margin-top:20px;">
-                            <button class="btn-modern" style="padding:10px;" onclick="executeRoomJoinChain('${room.id}')">CONNECT</button>
-                            ${matchOwn ? `<button class="btn-modern" style="background:var(--danger); color:white; padding:10px; width:auto;" onclick="terminateActiveRoom('${room.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-
-            const actionTrigger = document.getElementById('globalCreateRoomActionTrigger');
-            actionTrigger.disabled = localCreatedRoomFlag;
-            actionTrigger.style.opacity = localCreatedRoomFlag ? "0.4" : "1";
-        }
-
-        function executeRoomCreation() {
-            const label = document.getElementById('newRoomNameInput').value.trim();
-            let limit = parseInt(document.getElementById('newRoomCapInput').value);
-
-            if (!label) {
-                triggerPushNotification("Validation Error: Arena requires an explicit title description.", "error");
-                return;
-            }
-            if (isNaN(limit) || limit < 2) limit = 2;
-            if (limit > 15) limit = 15;
-
-            const structuredId = Date.now().toString();
-            const payload = { id: structuredId, name: label, max: limit, current: 1, host: runtimeUser.name };
+            const stream = document.getElementById('chatMessageStream');
+            const msgRow = document.createElement('div');
+            msgRow.style.cssText = "align-self: flex-start; background: #283046; padding: 10px 16px; border-radius: 12px; max-width: 80%; font-size: 15px; margin-bottom: 4px;";
+            msgRow.innerHTML = `<b style="color: var(--primary-yellow); font-size: 12px; display: block; margin-bottom: 2px;">${userData.name}</b> ${text}`;
             
-            memoryRoomsDatabase.push(payload);
-            localCreatedRoomFlag = true;
-            triggerModalState('createRoomModal', false);
-            renderDynamicLobbyGrid();
-            triggerPushNotification("Infrastructure deployed successfully!");
+            stream.appendChild(msgRow);
+            input.value = "";
+            stream.scrollTop = stream.scrollHeight;
         }
 
-        function terminateActiveRoom(id) {
-            memoryRoomsDatabase = memoryRoomsDatabase.filter(r => r.id !== id);
-            localCreatedRoomFlag = false;
-            renderDynamicLobbyGrid();
-            triggerPushNotification("Selected room instance has been destroyed.", "error");
-            if (activeHubId === id) {
-                showScreen('roomsScreen');
-            }
+        function exitChat() {
+            showActiveScreen('roomsScreen');
         }
 
-        function executeRoomJoinChain(id) {
-            activeHubId = id;
-            const TargetObj = memoryRoomsDatabase.find(r => r.id === id);
-            document.getElementById('activeWorkspaceRoomTitle').innerText = TargetObj.name.toUpperCase();
-
-            const actionMount = document.getElementById('runtimeHeaderActionMount');
-            if (TargetObj.host === runtimeUser.name) {
-                actionMount.innerHTML = `<button class="btn-modern" style="background:var(--danger); color:white; padding: 8px 16px;" onclick="terminateActiveRoom('${TargetObj.id}')">TERMINATE ARCHITECTURE</button>`;
-            } else {
-                actionMount.innerHTML = `<button class="btn-modern" style="width:auto; padding: 8px 16px; background:#1a1d2e;" onclick="document.getElementById('workspaceRightSidebar').classList.toggle('active')"><i class="fa-solid fa-sidebar"></i> TOGGLE PANEL</button>`;
-            }
-
-            document.getElementById('chatMessageStreamBox').innerHTML = `<div class="system-banner">Secure Web Session Layer Established. Welcome to the chat ecosystem.</div>`;
-            
-            document.getElementById('sidebarDynamicMembersBox').innerHTML = `
-                <div style="display:flex; align-items:center; gap:10px; margin-top:12px;">
-                    <img src="${runtimeUser.avatar}" style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
-                    <span style="font-size:14px; font-weight:600;">${runtimeUser.name} <span style="color:var(--primary); font-size:10px;">[YOU]</span></span>
-                </div>
-            `;
-
-            showScreen('chatScreen');
-        }
-
-        function leaveRoomContext() {
-            activeHubId = null;
-            showScreen('roomsScreen');
-        }
-
-        function dispatchUserMessage() {
-            const box = document.getElementById('workspaceMainTextInput');
-            const data = box.value.trim();
-            if (!data) return;
-
-            appendChatBubble(runtimeUser.name, data, 'me');
-            box.value = "";
-        }
-
-        function appendChatBubble(author, content, directionClass) {
-            const container = document.getElementById('chatMessageStreamBox');
-            const wrapper = document.createElement('div');
-            wrapper.className = `chat-bubble-wrap ${directionClass}`;
-            
-            if (directionClass !== 'system-msg') {
-                wrapper.innerHTML = `<span class="chat-sender-tag">${author}</span><div class="bubble-core">${content}</div>`;
-            } else {
-                wrapper.className = "system-banner";
-                wrapper.innerHTML = content;
-            }
-            
-            container.appendChild(wrapper);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function transmitChallengeToFeed() {
-            triggerModalState('challengeSettingsModal', false);
-            ceilingQuizQuestions = parseInt(document.getElementById('challengeMatchCountSelect').value);
-
-            appendChatBubble("SYSTEM MATRIX", `⚠️ A Live Trivia Combat Card has been initialized by ${runtimeUser.name}!`, 'system-msg');
-
-            const container = document.getElementById('chatMessageStreamBox');
-            const cardWidget = document.createElement('div');
-            cardWidget.style.cssText = "background: var(--bg-surface); padding: 20px; border-radius: 16px; text-align: center; margin: 15px auto; border: 1px solid var(--accent); width: 100%; max-width: 340px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);";
-            cardWidget.innerHTML = `
-                <h4 style="color:var(--accent); font-size:14px; margin-bottom:6px;">TRIVIA DUEL READY</h4>
-                <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Length: ${ceilingQuizQuestions} Nodes | Creator: ${runtimeUser.name}</p>
-                <button class="btn-modern" style="background:var(--accent); color:black; font-size:13px; padding:8px 16px;" onclick="interceptCombatAcceptance(this, '${runtimeUser.name}')">ACCEPT ENGAGEMENT</button>
-            `;
-            container.appendChild(cardWidget);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function interceptCombatAcceptance(element, hostName) {
-            if (runtimeUser.name === hostName) {
-                triggerPushNotification("Security Restriction: You are blocked from accepting your own matching instance.", "error");
-                return;
-            }
-            element.parentElement.remove();
-            initializeCombatModule();
-        }
-
-        function initializeCombatModule() {
-            indexQuizPointer = 0;
-            cumulativeScoreXP = 0;
-            showScreen('quizScreen');
-            renderQuizNode();
-        }
-
-        function renderQuizNode() {
-            if (indexQuizPointer >= ceilingQuizQuestions || indexQuizPointer >= matchTriviaCoreEngine.length) {
-                concludeCombatSession();
-                return;
-            }
-
-            document.getElementById('runtimeQuizProgressMeta').innerText = `QUESTION: ${indexQuizPointer + 1} / ${ceilingQuizQuestions}`;
-            document.getElementById('runtimeQuizScoreMeta').innerText = `SCORE: ${cumulativeScoreXP} XP`;
-
-            const currentObj = matchTriviaCoreEngine[indexQuizPointer];
-            document.getElementById('quizCoreQuestionText').innerText = currentObj.q;
-
-            const grid = document.getElementById('quizAnswersDynamicGrid');
-            grid.innerHTML = "";
-            currentObj.options.forEach((opt, idx) => {
-                grid.innerHTML += `<button class="btn-modern" style="background:var(--bg-card); color:white; border:1px solid rgba(255,255,255,0.05); text-align:left;" onclick="evaluateCombatSelection(${idx})">${opt}</button>`;
-            });
-        }
-
-        function evaluateCombatSelection(selectedIdx) {
-            if (selectedIdx === matchTriviaCoreEngine[indexQuizPointer].correct) {
-                cumulativeScoreXP += 100;
-                triggerPushNotification("+100 XP Secured!");
-            } else {
-                triggerPushNotification("Answer Deflected. 0 XP awarded.", "error");
-            }
-            indexQuizPointer++;
-            renderQuizNode();
-        }
-
-        function concludeCombatSession() {
-            showScreen('chatScreen');
-            appendChatBubble("🏆 COMPETITION REPORT", `⚡ Combat Resolution: Player <b>${runtimeUser.name}</b> dominated the instance and finalized with <b>${cumulativeScoreXP} XP</b>! 🔥`, 'system-msg');
-        }
-
-        document.getElementById('workspaceMainTextInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') dispatchUserMessage();
+        // إرسال بالضغط على Enter
+        document.getElementById('chatInputMessageNode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
         });
     </script>
 </body>
